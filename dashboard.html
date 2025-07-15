@@ -18,8 +18,8 @@
     }
     .glass {
       background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(30px);
+      box-shadow: 0 8px 32px 0 rgba(7, 7, 7, 0.626);
     }
     .fade-in {
       animation: fadeIn 1.2s ease-in-out forwards;
@@ -32,18 +32,29 @@
   <script>
     const backgroundImageURL = "https://images.unsplash.com/photo-1605902711622-cfb43c4437f0";
     document.addEventListener('DOMContentLoaded', () => {
-      document.body.style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.3)), url('${backgroundImageURL}')`;
+      document.body.style.backgroundImage = `linear-gradient(90deg, rgba(34,197,94,0.5), rgba(253,224,71,0.5), rgba(251,146,60,0.5)), url('${backgroundImageURL}')`;
+      document.body.style.transition = "background 10s ease";
+      document.body.animate([
+      { backgroundPosition: '0% 50%' },
+      { backgroundPosition: '100% 50%' }
+      ], {
+      duration: 8000,
+      iterations: Infinity
+      
+      });
     });
+  
   </script>
 </head>
-<body class="text-white font-sans">
-  <div class="container mx-auto p-6 fade-in">
-    <div class="flex flex-col md:flex-row justify-between items-center mb-4">
-      <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 animate-pulse">
-        Personnel Weekly Status
+<body class="text-black font-sans">
+  <div class="container mx-auto p-9 fade-in">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+      <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r 
+      from-blue-700 via-yellow-500 to-orange-600 animate-pulse">
+        DENR PENRO TAGUM<br>Personnel Weekly Status
       </h1>
       <div class="flex items-center space-x-4 mt-4 md:mt-0">
-        <div id="datetime" class="text-white text-sm font-medium"></div>
+        <div id="datetime" class="text-black text-sm font-semibold"></div>
         <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded shadow-lg">Logout</button>
       </div>
     </div>
@@ -54,21 +65,46 @@
 
       <select id="divisionFilter" onchange="loadDashboard()" class="px-4 py-2 border rounded text-black w-full md:w-1/3">
         <option value="">Filter by Division/Section</option>
-        <option value="Admin">Admin</option>
+        <option value="MSD">MSD</option>
         <option value="Planning">Planning</option>
-        <option value="Finance">Finance</option>
-        <option value="Technical">Technical</option>
-        <option value="ENR">ENR</option>
+        <option value="Personnel">Personnel</option>
+        <option value="Cashier">Cashier</option>
+        <option value="Accounting">Accounting</option>
+        <option value="Records">records</option>
+        <option value="PENRO">PENRO</option>
+        <option value="GSU">GSU</option>
+        <option value="TSD">TSD</option>
+        <option value="MES">MES</option>
+        <option value="CDS">CDS</option>
+        <option value="RPS">RPS</option>
       </select>
     </div>
 
     <!-- Week Range -->
-    <div id="week-range" class="text-white text-sm mb-4 font-medium italic"></div>
-
+    <div id="week-range" class="text-black text-sm mb-3 font-semibold italic">
+      class="text-4xl"
+    </div>
+    <!-- Customizable Table Header -->
+    <div class="overflow-auto glass rounded-lg sticky top-0 z-10 mb-4">
+      <table class="table-auto w-full text-center text-sm">
+        <thead class="bg-white bg-opacity-100 text-black uppercase">
+          <tr>
+             <th class="px-4 py-2">Photo</th>
+            <th class="px-5 py-2">Name of Personnel</th>
+            <th class="px-5 py-2">Designation<br>Division/Section</th>
+            <th class="px-4 py-2" id="monHeader">Mon</th>
+            <th class="px-4 py-2" id="tueHeader">Tue</th>
+            <th class="px-4 py-2" id="wedHeader">Wed</th>
+            <th class="px-4 py-2" id="thuHeader">Thu</th>
+            <th class="px-4 py-2" id="friHeader">Fri</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
     <!-- Table -->
     <div class="overflow-auto glass rounded-lg">
       <table class="table-auto w-full text-center text-sm">
-        <thead class="bg-white bg-opacity-30 text-white uppercase">
+      <thead class="bg-white bg-opacity-30 text-blue uppercase" style="color: rgba(152, 23, 23, 0.679);"></thead>
           <tr>
             <th class="px-4 py-2">Photo</th>
             <th class="px-4 py-2">Name</th>
@@ -196,13 +232,17 @@
           if (!name.toLowerCase().includes(searchQuery)) return;
           if (divisionFilter && !designation.toLowerCase().includes(divisionFilter)) return;
 
-          const photo = data.photoURL ? `<img src="${data.photoURL}" alt="photo" class="w-12 h-12 rounded-full mx-auto" />` : "";
+          const photo = data.photoURL ? `<img src="${data.photoURL}" alt="photo" class="w-15 h-15 rounded-full mx-auto" />` : "";
 
           const row = `
             <tr class="border-b">
-              <td class="px-4 py-2">${photo}</td>
-              <td class="px-4 py-2 uppercase">${name}</td>
-              <td class="px-4 py-2 uppercase">${designation}</td>
+                <td class="px-3 py-3 text-center">
+                <div class="w-20 h-20 mx-auto rounded-full border-2 border-black overflow-hidden flex items-center justify-center bg-white bg-opacity-50">
+                  ${photo}
+                </div>
+                </td>
+                <td class="px-4 py-2 uppercase font-bold">${name}</td>
+                <td class="px-4 py-2 uppercase font-bold">${designation}</td>
               <td class="px-2 py-1 ${statusColor(data.weeklyStatus?.monday)}">${statusIcon(data.weeklyStatus?.monday)} ${data.weeklyStatus?.monday || ""}</td>
               <td class="px-2 py-1 ${statusColor(data.weeklyStatus?.tuesday)}">${statusIcon(data.weeklyStatus?.tuesday)} ${data.weeklyStatus?.tuesday || ""}</td>
               <td class="px-2 py-1 ${statusColor(data.weeklyStatus?.wednesday)}">${statusIcon(data.weeklyStatus?.wednesday)} ${data.weeklyStatus?.wednesday || ""}</td>
