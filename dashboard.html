@@ -70,11 +70,12 @@
       </div>
     </div>
     <button 
-      onclick="window.open('https://denrtagum.rave-master.de/index.html', '_blank')" 
-      class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded shadow-lg mr-2 transition duration-200 transform hover:scale-105 hover:-translate-y-1"
-    >
-      👈Back to Profile
-    </button>
+     id="backButton" 
+      onclick="window.location.href='index.html'"
+  class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded shadow-lg mr-2 transition duration-200 transform hover:scale-105 hover:-translate-y-1"
+>
+👨‍💼Back to Profile
+</button> 
     <button 
       onclick="window.open('https://denrxisystems.com/denr_personnel_portal/login', '_blank')" 
       class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded shadow-lg mr-2 transition duration-200 transform hover:scale-105 hover:-translate-y-1"
@@ -86,7 +87,7 @@
        class="inline-block bg-green-500 text-white font-semibold py-2 px-5 rounded shadow-lg transition duration-200 transform hover:scale-105 hover:bg-green-600 hover:-translate-y-1">
       📋 Give Feedback
       </a>
-    </div>
+    </div> <br>
     <!-- Search + Filter -->
     <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
       <input id="search" type="text" placeholder="Search staff by name..." oninput="loadDashboard()" class="px-4 py-2 border rounded text-black w-full md:w-1/2">
@@ -309,8 +310,8 @@
   </script>
   <footer class="text-center text-white text-sm py-4 mt-8">
   <div class="container mx-auto px-4">
-    <a href="search.html" class="text-white hover:underline mx-2">How Search works</a>
-    <a href="privacy policy.html" class="text-white hover:underline mx-2">Privacy Policy</a>
+    
+    <a href="privacy policy.html" class="text-white hover:underline mx-2">Privacy Policy</a> |
     <a href="terms and condition.html" class="text-white hover:underline mx-2">Terms and Condition</a>
     
   </div>
