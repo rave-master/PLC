@@ -37,7 +37,9 @@
       }
     }
   </style>
+  
   <script>
+    
     const backgroundImageURL = "https://ia601502.us.archive.org/6/items/less-denrpenro-office-2025-copy/less%20DENRPENRO%20Office2025%20copy.jpg";
     document.addEventListener('DOMContentLoaded', () => {
       document.body.style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.3)), url('${backgroundImageURL}')`;
@@ -50,6 +52,24 @@
       }
     }
   </script>
+  <style>
+  body {
+    background-repeat: repeat;
+    background-size: cover;
+    animation: pan-background 60s linear infinite;
+    background-attachment: fixed;
+  }
+
+  @keyframes pan-background {
+    0% {
+      background-position: 0% 0%;
+    }
+    100% {
+      background-position: 100% 0%;
+    }
+  }
+</style>
+
 </head>
 
 <body class="text-white font-aerial black">
