@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Personnel Analytic Dashboard</title>
+  <title>PENRO Personnel Status Dashboard</title>
   <link rel="icon" href="https://i.imgur.com/ZRlEx8f.png" type="image/x-icon">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -156,15 +157,13 @@
     }
     
     .stat-number {
-  font-size: 2.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin: 12px 0;
-}
-
-  
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 12px 0;
+    }
     
     .stat-label {
       color: #64748b;
@@ -1017,15 +1016,28 @@
           const penroData = results.data
             .filter(row => row.name && row.name.trim() && row.weeklyStatus && row.weeklyStatus.trim())
             .map((row, index) => {
+              // Debug: Log the raw row data to see what fields are available
+              console.log('Raw CSV row:', row);
+              
               // Generate photo URL if not provided
               const photoURL = row.photoURL && row.photoURL.trim() ? 
                 row.photoURL.trim() : 
                 `https://ui-avatars.com/api/?name=${encodeURIComponent(row.name.trim())}&background=random&size=150`;
               
+              // Check for various timestamp field names that might exist in your CSV
+              const updateTime = row.__updateTime__ || 
+                               row.lastUpdated || 
+                               row['Last Updated'] || 
+                               row.timestamp || 
+                               row.updated || 
+                               'Not available';
+              
+              console.log('Update time found:', updateTime);
+              
               return {
                 __id__: `penro_${index}`,
-                __createTime__: new Date().toISOString(),
-                __updateTime__: new Date().toISOString(),
+                __createTime__: row.__createTime__ || new Date().toISOString(),
+                __updateTime__: updateTime,
                 name: row.name.trim(),
                 designation: (row.designation || '').trim(),
                 weeklyStatus: row.weeklyStatus.trim(),
@@ -1239,14 +1251,54 @@
                 }
               }
               
-              const lastUpdated = row.__updateTime__ ? 
-                new Date(row.__updateTime__).toLocaleString('en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                }) : 'N/A';
+              // Format the __updateTime__ field properly - use actual data from sheets
+              let lastUpdated = 'No update time';
+              if (row.__updateTime__ && row.__updateTime__.trim() !== '') {
+                try {
+                  // Handle different timestamp formats from Google Sheets
+                  let dateStr = row.__updateTime__.trim();
+                  
+                  // If it's already a simple date format, try to improve it
+                  if (dateStr.includes('/') || dateStr.includes('-')) {
+                    const updateDate = new Date(dateStr);
+                    if (!isNaN(updateDate.getTime())) {
+                      lastUpdated = updateDate.toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      }) + ' at ' + updateDate.toLocaleTimeString('en-US', {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                      });
+                    } else {
+                      lastUpdated = dateStr;
+                    }
+                  } else {
+                    // Try to parse as ISO timestamp
+                    const updateDate = new Date(dateStr);
+                    if (!isNaN(updateDate.getTime())) {
+                      lastUpdated = updateDate.toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      }) + ' at ' + updateDate.toLocaleTimeString('en-US', {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                      });
+                    } else {
+                      // If parsing fails, show the raw value
+                      lastUpdated = dateStr;
+                    }
+                  }
+                } catch (e) {
+                  console.error('Error formatting update time:', e, 'Raw value:', row.__updateTime__);
+                  lastUpdated = row.__updateTime__ || 'Invalid date';
+                }
+              }
               
               return `
                 <tr class="table-row hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-300">
@@ -1628,8 +1680,8 @@
     }
 
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'968df526a07e855f',t:'MTc1NDE0MTcxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
- <script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9690c6a093effec0',t:'MTc1NDE3MTI2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+  <script>
   document.addEventListener("contextmenu", e => e.preventDefault());
   document.onkeydown = function(e) {
     if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 'I'.charCodeAt(0))) {
@@ -1637,6 +1689,5 @@
     }
   };
 </script>
+
 </html>
-
-
