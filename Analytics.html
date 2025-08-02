@@ -1,10 +1,27 @@
-<!-- Analytics.html -->
-<script>
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
-  if (isLoggedIn !== 'true') {
-    // Redirect to login page
-    window.location.href = 'index.html';
-  }
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBjYPyVv9qC88JGD8N1tnDZLT0hh1sZUtQ",
+    authDomain: "locator-66521.firebaseapp.com",
+    projectId: "locator-66521",
+    storageBucket: "locator-66521.appspot.com",
+    messagingSenderId: "322028471975",
+    appId: "1:322028471975:web:ee77430c76935588187d82",
+    measurementId: "G-S87YVN1RX4",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      // Not logged in -> redirect to login page
+      window.location.href = 'index.html';
+    }
+    // else do nothing, user is authenticated
+  });
 </script>
 
 
@@ -1701,5 +1718,6 @@
 </script>
 
 </html>
+
 
 
