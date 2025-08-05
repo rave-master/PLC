@@ -30,9 +30,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PENRO Personnel Analytic Dashboard</title>
-  <link rel="icon" href="https://i.imgur.com/ZRlEx8f.png" type="image/x-icon">
-
+  <title>PENRO Personnel Status Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -81,7 +79,7 @@
     }
     
     .tab-button.active {
-      background: rgba(214, 13, 13, 0.9);
+      background: rgba(59, 130, 246, 0.9);
       color: white;
       border-color: rgba(59, 130, 246, 0.3);
       box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
@@ -89,7 +87,7 @@
     
     .tab-button:hover:not(.active) {
       background: rgba(255, 255, 255, 0.2);
-      color: white;
+      color: #1f2937;
       transform: translateY(-2px);
     }
     
@@ -290,11 +288,10 @@
     <div class="max-w-7xl mx-auto">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-3xl font-bold bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent mb-2">
+          <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
             PENRO Personnel Status Dashboard
           </h1>
           <p class="text-gray-600">Live Workforce Analytics • Personnel Management System</p>
-          <p class="text-gray-600" style="font-size:.75rem; font-style:italic;"> This page is updated daily at 5:00 PM on regular working days (Monday to Friday)</p>
         </div>
         <div class="flex items-center gap-6">
           <!-- Online Status Indicator -->
@@ -1510,7 +1507,7 @@
       showSuccessMessage('📊 Data exported to CSV successfully!');
     }
 
-    function exportToPDF() {
+    async function exportToPDF() {
       if (originalData.length === 0) {
         alert('No data to export. Please load data from Google Sheets first.');
         return;
@@ -1578,15 +1575,62 @@
         doc.text(`${status}: ${count} employees`, 30, yPos);
         yPos += 8;
       });
+
+      // Function to convert image to base64
+      const getImageDataURL = (url) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 40;
+            canvas.height = 40;
+            ctx.drawImage(img, 0, 0, 40, 40);
+            resolve(canvas.toDataURL('image/jpeg', 0.8));
+          };
+          img.onerror = function() {
+            // Create a default avatar if image fails to load
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 40;
+            canvas.height = 40;
+            ctx.fillStyle = '#e5e7eb';
+            ctx.fillRect(0, 0, 40, 40);
+            ctx.fillStyle = '#9ca3af';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('?', 20, 25);
+            resolve(canvas.toDataURL('image/jpeg', 0.8));
+          };
+          img.src = url;
+        });
+      };
       
-      // Prepare table data for ALL employees (not limited)
-      const tableData = originalData.map(employee => {
+      // Prepare table data with photos
+      const tableData = [];
+      
+      // Show loading message
+      showSuccessMessage('📸 Loading employee photos for PDF...');
+      
+      for (let i = 0; i < originalData.length; i++) {
+        const employee = originalData[i];
+        
+        // Get image data
+        let imageData = null;
+        try {
+          imageData = await getImageDataURL(employee.photoURL || 'https://via.placeholder.com/40');
+        } catch (e) {
+          console.error('Failed to load image for', employee.name, e);
+        }
+        
         const row = [
-          employee.name || '',
-          employee.designation || ''
+          imageData, // Photo column
+          (employee.name || '').toUpperCase(), // Name in UPPERCASE
+          (employee.designation || '').toUpperCase() // Designation in UPPERCASE
         ];
 
-        // Add weekly status columns with color coding
+        // Add weekly status columns
         if (employee.weeklyStatus) {
           try {
             const weeklyData = JSON.parse(employee.weeklyStatus);
@@ -1602,19 +1646,20 @@
           row.push('', '', '', '', '');
         }
 
-        return row;
-      });
+        tableData.push(row);
+      }
 
-      // Add table with custom styling
+      // Add table with custom styling and photos
       doc.autoTable({
-        head: [['Name', 'Designation', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']],
+        head: [['Photo', 'Name', 'Designation', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']],
         body: tableData,
         startY: yPos + 10,
         styles: { 
           fontSize: 7,
           cellPadding: 3,
           lineColor: [200, 200, 200],
-          lineWidth: 0.1
+          lineWidth: 0.1,
+          minCellHeight: 12
         },
         headStyles: { 
           fillColor: [59, 130, 246],
@@ -1623,17 +1668,43 @@
           fontStyle: 'bold'
         },
         columnStyles: {
-          0: { cellWidth: 35, fontStyle: 'bold' },
-          1: { cellWidth: 40 },
-          2: { cellWidth: 22 },
-          3: { cellWidth: 22 },
-          4: { cellWidth: 22 },
-          5: { cellWidth: 22 },
-          6: { cellWidth: 22 }
+          0: { cellWidth: 15, halign: 'center' }, // Photo column
+          1: { cellWidth: 30, fontStyle: 'bold' }, // Name column
+          2: { cellWidth: 35 }, // Designation column
+          3: { cellWidth: 18 },
+          4: { cellWidth: 18 },
+          5: { cellWidth: 18 },
+          6: { cellWidth: 18 },
+          7: { cellWidth: 18 }
+        },
+        didDrawCell: function(data) {
+          // Add photos to the first column
+          if (data.column.index === 0 && data.cell.section === 'body') {
+            const imageData = data.cell.raw;
+            if (imageData && typeof imageData === 'string' && imageData.startsWith('data:image')) {
+              try {
+                doc.addImage(
+                  imageData, 
+                  'JPEG', 
+                  data.cell.x + 2, 
+                  data.cell.y + 1, 
+                  10, 
+                  10
+                );
+              } catch (e) {
+                console.error('Error adding image to PDF:', e);
+              }
+            }
+          }
         },
         didParseCell: function(data) {
+          // Don't show image data as text in photo column
+          if (data.column.index === 0) {
+            data.cell.text = [''];
+          }
+          
           // Color code status cells
-          if (data.column.index >= 2 && data.column.index <= 6) {
+          if (data.column.index >= 3 && data.column.index <= 7) {
             const status = data.cell.text[0];
             if (status && statusColors[status]) {
               const color = statusColors[status];
@@ -1655,7 +1726,7 @@
       // Generate filename
       const filename = `PENRO_Personnel_Week${weekNumber}_${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}.pdf`;
       doc.save(filename);
-      showSuccessMessage('📄 Enhanced PDF exported successfully!');
+      showSuccessMessage('📄 PDF with photos exported successfully!');
     }
 
     function generateCSV(data) {
@@ -1719,6 +1790,7 @@
 </script>
 
 </html>
+
 
 
 
