@@ -70,27 +70,28 @@
     </div>
    <div>
       <a href="https://forms.gle/XNxCJF3cDWWdwSmW8" target="_blank" rel="noopener noreferrer"
-       class="inline-block bg-green-500 text-white font-semibold py-2 px-5 rounded shadow-lg transition duration-200 transform hover:scale-105 hover:bg-green-600 hover:-translate-y-1">
+       class="inline-block bg-red-500 text-white font-semibold py-2 px-5 rounded shadow-lg transition duration-200 transform hover:scale-105 hover:bg-red-600 hover:-translate-y-1">
       📋 Give  Feedback
       </a>
     </div> <br>
     <button 
   id="backButton" 
-      onclick="window.location.href='index.html'"
-  class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded shadow-lg mr-2 transition duration-200 transform hover:scale-105 hover:-translate-y-1">👨‍💼Back to Profile
-
+  onclick="window.location.href='index.html'"
+  class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded shadow-lg mr-2 transition-transform duration-200 transform hover:scale-110 hover:-translate-y-1">
+  👨‍💼Back to Profile
 </button> 
 
-    <button 
-      onclick="window.open('https://denrxisystems.com/denr_personnel_portal/login', '_blank')" 
-      class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded shadow-lg mr-2 transition duration-200 transform hover:scale-105 hover:-translate-y-1">✈️Travel Order
-    </button> 
-    <button 
+<button 
+  onclick="window.open('https://denrxisystems.com/denr_personnel_portal/login', '_blank')" 
+  class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded shadow-lg mr-2 transition-transform duration-200 transform hover:scale-110 hover:-translate-y-1">
+  ✈️Travel Order
+</button> 
+
+<button 
   id="AnalyticsButton" 
-      onclick="window.location.href='Analytics.html'"
-  class="bg-blue-500 hover:bg-blue-600 text-white font-semibold 
-  py-2 px-6 rounded shadow-lg mr-2 transition duration-200 transform 
-  hover:scale-105 hover:-translate-y-1">📊Analytics
+  onclick="window.location.href='Analytics.html'"
+  class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded shadow-lg mr-2 transition-transform duration-200 transform hover:scale-110 hover:-translate-y-1">
+  📊Analytics
 </button> 
     <!-- Search + Filter -->
     <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
@@ -118,35 +119,35 @@
       class="text-4xl"
     </div>
     <!-- Customizable Table Header -->
-    <div class="overflow-auto glass rounded-lg sticky top-0 z-10 mb-4">
-      <table class="table-auto w-full text-center text-sm">
-        <thead class="bg-white bg-opacity-100 text-black uppercase">
+    <div class="overflow-auto glass rounded-lg sticky top-0 z-10 mb-4 border-2 border-red-600">
+      <table class="table-auto w-full text-center text-sm border-2 border-red-600">
+        <thead class="bg-white bg-opacity-100 text-black uppercase border-b-2 border-red-600">
           <tr>
-             <th class="px-4 py-2">Photo</th>
-            <th class="px-5 py-2">Name of Personnel</th>
-            <th class="px-5 py-2">Designation<br>Division/Section</th>
-            <th class="px-4 py-2" id="monHeader">Mon</th>
-            <th class="px-4 py-2" id="tueHeader">Tue</th>
-            <th class="px-4 py-2" id="wedHeader">Wed</th>
-            <th class="px-4 py-2" id="thuHeader">Thu</th>
-            <th class="px-4 py-2" id="friHeader">Fri</th>
+             <th class="px-4 py-2 border-b-2 border-red-600">Photo</th>
+            <th class="px-5 py-2 border-b-2 border-red-600">Name of Personnel</th>
+            <th class="px-5 py-2 border-b-2 border-red-600">Designation<br>Division/Section</th>
+            <th class="px-4 py-2 border-b-2 border-red-600" id="monHeader">Mon</th>
+            <th class="px-4 py-2 border-b-2 border-red-600" id="tueHeader">Tue</th>
+            <th class="px-4 py-2 border-b-2 border-red-600" id="wedHeader">Wed</th>
+            <th class="px-4 py-2 border-b-2 border-red-600" id="thuHeader">Thu</th>
+            <th class="px-4 py-2 border-b-2 border-red-600" id="friHeader">Fri</th>
           </tr>
         </thead>
       </table>
     </div>
     <!-- Table -->
-    <div class="overflow-auto glass rounded-lg">
-      <table class="table-auto w-full text-center text-sm border border-gray-400">
-      <thead class="bg-white bg-opacity-30 text-blue uppercase" style="color: rgba(152, 23, 23, 0.679);">
+    <div class="overflow-auto glass rounded-lg border-2 border-red-600">
+      <table class="table-auto w-full text-center text-sm border-2 border-red-600">
+      <thead class="bg-white bg-opacity-30 text-blue uppercase border-b-2 border-red-600" style="color: rgba(152, 23, 23, 0.679);">
         <tr>
-        <th class="px-4 py-2 border-b border-gray-400">Photo</th>
-        <th class="px-4 py-2 border-b border-gray-400">Name</th>
-        <th class="px-4 py-2 border-b border-gray-400">Designation-Division/Section</th>
-        <th class="px-4 py-2 border-b border-gray-400" id="monHeader">Mon</th>
-        <th class="px-4 py-2 border-b border-gray-400" id="tueHeader">Tue</th>
-        <th class="px-4 py-2 border-b border-gray-400" id="wedHeader">Wed</th>
-        <th class="px-4 py-2 border-b border-gray-400" id="thuHeader">Thu</th>
-        <th class="px-4 py-2 border-b border-gray-400" id="friHeader">Fri</th>
+        <th class="px-4 py-2 border-b-2 border-red-600">Photo</th>
+        <th class="px-4 py-2 border-b-2 border-red-600">Name</th>
+        <th class="px-4 py-2 border-b-2 border-red-600">Designation-Division/Section</th>
+        <th class="px-4 py-2 border-b-2 border-red-600" id="monHeader">Mon</th>
+        <th class="px-4 py-2 border-b-2 border-red-600" id="tueHeader">Tue</th>
+        <th class="px-4 py-2 border-b-2 border-red-600" id="wedHeader">Wed</th>
+        <th class="px-4 py-2 border-b-2 border-red-600" id="thuHeader">Thu</th>
+        <th class="px-4 py-2 border-b-2 border-red-600" id="friHeader">Fri</th>
         </tr>
       </thead>
       <tbody id="staff-table" class="text-black bg-white bg-opacity-80"></tbody>
